@@ -115,15 +115,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="binaryTree.cpp" />
+    <ClCompile Include="bsTree.cpp" />
+    <ClCompile Include="bsTreeNode.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="minStack.cpp" />
+    <ClCompile Include="minHeap.cpp" />
     <ClCompile Include="person.cpp" />
+    <ClCompile Include="system.cpp" />
+    <ClCompile Include="ui.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="binaryTree.h" />
-    <ClInclude Include="minStack.h" />
+    <ClInclude Include="bsTree.h" />
+    <ClInclude Include="bsTreeNode.h" />
+    <ClInclude Include="minHeap.h" />
     <ClInclude Include="person.h" />
+    <ClInclude Include="system.h" />
+    <ClInclude Include="ui.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
