@@ -29,6 +29,7 @@ int Ui::getIDFromUser(){
 int Ui::getUserSelection()
 {
 	int input;
+	cin >> input;
 	if (input >= 1 && input <= system->getTotalPeople())
 	{
 		return input;
@@ -43,6 +44,7 @@ const char* Ui::getNameFromUser()
 	char userInput[MAX_NAME_LEN];
 
 	cin.getline(userInput, MAX_NAME_LEN); //validation??
-	return userInput;
+	char* name = new char[strlen(userInput) + 1];
+	return name;
 }
 

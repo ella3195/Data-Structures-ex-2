@@ -1,5 +1,7 @@
 #include "person.h"
 
+#pragma warning(disable:4996)
+
 
 Person::Person(const char* name, int id)
 {

@@ -19,8 +19,8 @@ public:
 	minHeap(int max);
 	minHeap(Person* arr[], int n);
 	~minHeap();
-	Person* Max();
-	Person* DeleteMax();
+	Person* Min();
+	Person* DeleteMin();
 	int Insert(Person* person);
 
 	void MakeEmpty();
