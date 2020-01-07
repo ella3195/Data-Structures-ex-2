@@ -8,6 +8,7 @@ class BSTree
 {
 private:
 	BSTreeNode *root;
+	void freeTree(BSTreeNode* root);
 
 public:
 	BSTree() { root = nullptr; }
@@ -16,7 +17,7 @@ public:
 
 	BSTreeNode* getRoot();
 	void MakeEmpty();
-	void IsEmpty();
+	bool IsEmpty();
 	void Delete(BSTreeNode* toDelete);
 	void swapMaxLeftTree(BSTreeNode* toDelete);
 	BSTreeNode* Find(int id);
@@ -26,6 +27,8 @@ public:
 	BSTreeNode* findMax();//have max parameter?
 	int Min();
 	int Max();
+	int Succ(int key);
+	int Pred(int key);
 	void PrintTree();
 };
 

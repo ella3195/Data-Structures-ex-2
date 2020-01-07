@@ -23,6 +23,16 @@ BSTreeNode::~BSTreeNode()
 
 }
 
+const char* BSTreeNode::getData()
+{
+	return data;
+}
+
+int BSTreeNode::getKey()
+{
+	return key;
+}
+
 void BSTreeNode::InOrder()
 {
 	BSTreeNode* temp = this;

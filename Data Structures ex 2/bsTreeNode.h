@@ -18,6 +18,9 @@ public:
 	BSTreeNode(int id, const char* name, BSTreeNode *left, BSTreeNode *right, BSTreeNode* father);
 	~BSTreeNode();
 
+	const char* getData();
+	int getKey();
+
 	void InOrder();
 	void PreOrder();
 	void PostOrder();

@@ -106,16 +106,16 @@ minHeap::minHeap(Person *arr[], int n) //should be FLOYD
 }
 
 
-void minHeap::MakeEmpty()
+void minHeap::MakeEmpty() //unnecessary?
 {
 
 }
 
 bool minHeap::IsEmpty()
 {
-	return true;
-
+	return heapSize == 0;
 }
+
 
 void minHeap::Swap(Person* a, Person *b)
 {

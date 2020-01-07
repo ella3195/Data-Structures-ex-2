@@ -23,7 +23,7 @@ public:
 	Person* DeleteMin();
 	int Insert(Person* person);
 
-	void MakeEmpty();
+	void MakeEmpty(); //unecessarry?
 	bool IsEmpty();
 
 	void Swap(Person* a, Person* b);
