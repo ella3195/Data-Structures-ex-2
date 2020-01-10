@@ -1,4 +1,7 @@
 #include "system.h"
+#include <stdlib.h>
+#include <time.h> 
+
 
 int System::getTotalPeople()
 {
@@ -8,6 +11,7 @@ int System::getTotalPeople()
 void System::addPerson(Person* newPerson)
 {
 	allPeople[totalPeople] = newPerson;
+	totalPeople++;
 }
 
 System::System(int numOfPeople)

@@ -2,7 +2,6 @@
 #define __SYSTEM_H
 
 #include "person.h"
-#include "ui.h"
 
 class System
 {
@@ -16,7 +15,7 @@ public:
 	Person **getAllPeople();
 
 private:
-	System(const System& const);
+	System(const System& other);
 
 	int totalPeople;
 	Person **allPeople;

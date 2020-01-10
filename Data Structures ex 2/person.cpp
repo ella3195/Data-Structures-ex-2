@@ -1,10 +1,18 @@
 #include "person.h"
 
+#pragma warning(disable:4996)
+
 
 Person::Person(const char* name, int id)
 {
 	setName(name);
 	setID(id);
+}
+
+void Person::operator=(const Person& other)
+{
+	setName(other.getName());
+	setID(other.getID());
 }
 
 Person::Person(const Person& other)
@@ -35,13 +43,18 @@ void Person::setID(int id)
 
 void Person::setName(const char *name)
 {
-	delete[] name;
-	this->name = new char[strlen(name) + 1];
-	strcpy(this->name, name);
+	if (!name)
+		this->name = nullptr;
+	else
+	{
+		delete[] this->name;
+		this->name = new char[strlen(name) + 1];
+		strcpy(this->name, name);
+	}
 }
 
 
 void Person::show() const
 {
-	cout << id << " " << name;
+	cout << id << " " << name << endl;
 }

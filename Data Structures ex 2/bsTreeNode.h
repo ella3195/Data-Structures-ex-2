@@ -2,7 +2,8 @@
 #define __BSTREENODE_H
 
 #include "person.h"
-#include "bsTree.h"
+
+class BSTree;
 
 class BSTreeNode
 {
@@ -10,12 +11,15 @@ class BSTreeNode
 private:
 	int key;
 	const char *data;
-	BSTreeNode *left, *right;
+	BSTreeNode* left, * right, * father;
 
 public:
 	BSTreeNode();
-	BSTreeNode(int id, const char* name, BSTreeNode *left, BSTreeNode *right);
+	BSTreeNode(int id, const char* name, BSTreeNode *left, BSTreeNode *right, BSTreeNode* father);
 	~BSTreeNode();
+
+	const char* getData();
+	int getKey();
 
 	void InOrder();
 	void PreOrder();

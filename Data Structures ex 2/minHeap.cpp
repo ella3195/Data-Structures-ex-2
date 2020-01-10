@@ -14,7 +14,7 @@ minHeap::~minHeap()
 	if (allocated)
 	{
 		delete[] data;
-		data = NULL;
+		data = nullptr;
 	}
 }
 
@@ -55,11 +55,12 @@ void minHeap::FixHeap(int node)
 	}
 }
 
-Person* minHeap::Max() // ??
+Person* minHeap::Min() // ??
 {
+	return data[0];
 }
 
-Person* minHeap::DeleteMax()
+Person* minHeap::DeleteMin()
 {
 	if (heapSize < 1)
 	{
@@ -67,11 +68,11 @@ Person* minHeap::DeleteMax()
 	}
 	else
 	{
-		Person* max = data[0];
+		Person* min = data[0];
 		heapSize--;
 		data[0] = data[heapSize];
 		FixHeap(0);
-		return(max);
+		return(min);
 	}
 }
 
@@ -105,15 +106,16 @@ minHeap::minHeap(Person *arr[], int n) //should be FLOYD
 }
 
 
-void minHeap::MakeEmpty()
+void minHeap::MakeEmpty() //unnecessary?
 {
 
 }
 
 bool minHeap::IsEmpty()
 {
-
+	return heapSize == 0;
 }
+
 
 void minHeap::Swap(Person* a, Person *b)
 {
