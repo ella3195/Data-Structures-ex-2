@@ -2,17 +2,15 @@
 
 BSTreeNode::BSTreeNode()
 {
-	key = 0;
-	data = 0;
+	data = nullptr;
 	left = nullptr;
 	right = nullptr;
 	father = nullptr;
 }
 
-BSTreeNode::BSTreeNode(int key, const char* data, BSTreeNode *left, BSTreeNode *right, BSTreeNode* father)
+BSTreeNode::BSTreeNode(int key, const char* name, BSTreeNode *left, BSTreeNode *right, BSTreeNode* father)
 {
-	this->key = key;
-	this->data = data;
+	data = new Person(name, key);
 	this->left = left;
 	this->right = right;
 	this->father = father;
@@ -20,17 +18,17 @@ BSTreeNode::BSTreeNode(int key, const char* data, BSTreeNode *left, BSTreeNode *
 
 BSTreeNode::~BSTreeNode()
 {
-
+	delete data;
 }
 
-const char* BSTreeNode::getData()
+Person* BSTreeNode::getData()
 {
 	return data;
 }
 
 int BSTreeNode::getKey()
 {
-	return key;
+	return data->getID();
 }
 
 void BSTreeNode::InOrder()
@@ -39,7 +37,7 @@ void BSTreeNode::InOrder()
 	if (temp)
 	{
 		temp->left->InOrder();
-		cout << "(Key: " << temp->key << ", Data: " << temp->data << ") ";
+		cout << "(Key: " << temp->data->getID() << ", Data: " << temp->data->getName() << ") ";
 		temp->right->InOrder();
 	}
 }
@@ -51,7 +49,7 @@ void BSTreeNode::PreOrder()
 	{
 		temp->left->InOrder();
 		temp->right->InOrder();
-		cout << "(Key: " << temp->key << ", Data: " << temp->data << ") ";
+		cout << "(Key: " << temp->data->getID() << ", Data: " << temp->data->getName() << ") ";
 	}
 }
 
@@ -60,7 +58,7 @@ void BSTreeNode::PostOrder()
 	BSTreeNode* temp = this;
 	if (temp)
 	{
-		cout << "(Key: " << temp->key << ", Data: " << temp->data << ") ";
+		cout << "(Key: " << temp->data->getID() << ", Data: " << temp->data->getName() << ") ";
 		temp->left->InOrder();
 		temp->right->InOrder();
 	}

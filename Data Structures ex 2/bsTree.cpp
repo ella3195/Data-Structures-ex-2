@@ -36,40 +36,75 @@ BSTreeNode* BSTree::getRoot()
 	return root;
 }
 
+
+//worst = n (one-way tree)
+//average = log n (balanced tree)
+BSTreeNode* BSTree::Find(int key, int &numComp)
+{
+	BSTreeNode *temp = root;
+	while (temp != nullptr)
+	{
+		numComp++;//comparing keys
+		if (key == temp->getKey())
+		{
+			return temp;
+		}
+		else
+		{
+			numComp++;//comparing keys
+			if (key < temp->getKey())
+			{
+				temp = temp->left;
+			}
+			else
+			{
+				temp = temp->right;
+			}
+		}
+	}
+}
+
 BSTreeNode* BSTree::Find(int key)
 {
 	BSTreeNode *temp = root;
 	while (temp != nullptr)
 	{
-		if (key == temp->key)
+		if (key == temp->getKey())
 		{
 			return temp;
 		}
-		else if (key < temp->key)
-		{
-			temp = temp->left;
-		}
 		else
 		{
-			temp = temp->right;
+			if (key < temp->getKey())
+			{
+				temp = temp->left;
+			}
+			else
+			{
+				temp = temp->right;
+			}
 		}
 	}
 }
 
-void BSTree::Insert(int key, const char* data)
+
+//worst = n
+//average = log n
+void BSTree::Insert(int key, const char* data, int &numComp)
 {
-	if (Find(key) != nullptr)
+	if (Find(key, numComp) != nullptr) 
 	{
 		return; //  key already exists;
 	}
 	BSTreeNode* temp = root;
-	BSTreeNode* parent = nullptr;
+	BSTreeNode* parent = nullptr; //will be parent of newnode
 	BSTreeNode* newnode;
 
 	while (temp != nullptr)
 	{
 		parent = temp;
-		if (key < temp->key)
+		numComp++;//comparing keys
+		if (key < temp->getKey())
 		{
 			temp = temp->left;
 		}
@@ -77,18 +112,22 @@ void BSTree::Insert(int key, const char* data)
 	}
 
 	newnode = new BSTreeNode(key, data, nullptr, nullptr, parent);
-	if (parent == nullptr)
+	if (parent == nullptr)//empty tree
 	{
 		root = newnode;
 	}
-	else if (key < parent->key)
+	else
 	{
-		parent->left = newnode;
+		numComp++;//comparing keys
+		if (key < parent->getKey())
+		{
+			parent->left = newnode;
+		}
+		else parent->right = newnode;
 	}
-	else parent->right = newnode;
 }
 
-BSTreeNode* BSTree::findMax()
+BSTreeNode* BSTree::findMax()//max node in BSTree - most right node
 {
 	BSTreeNode* max = root;
 	while (max->right != nullptr)
@@ -97,16 +136,25 @@ BSTreeNode* BSTree::findMax()
 	
 }
 
+BSTreeNode* BSTree::findMin()//max node in BSTree - most left node
+{
+	BSTreeNode* min = root;
+	while (min->left != nullptr)
+		min = min->left;
+	return min;
+
+}
+
 void BSTree::Delete(BSTreeNode* toDelete)
 {
 	BSTreeNode* father = toDelete->father;
 	if (!(toDelete->left)) //no left son
 	{
-		if (toDelete == father->left) //deleting a left son
+		if (toDelete == father->left) //deleting a left son of father
 			father->left = toDelete->right;
-		else //deleting a right son
+		else //deleting a right son of father
 			father->right = toDelete->right;
-		if (toDelete->right) //updating the son's father
+		if (toDelete->right) //updating toDelete's son's father
 			toDelete->right->father = father;
 		delete toDelete;
 	}
@@ -120,7 +168,7 @@ void BSTree::Delete(BSTreeNode* toDelete)
 			toDelete->left->father = father;
 		delete toDelete;
 	}
-	else
+	else //toDelete has 2 sons, need to swap with max node of left sub-tree
 	{
 		swapMaxLeftTree(toDelete);
 	}
@@ -131,7 +179,6 @@ void BSTree::swapMaxLeftTree(BSTreeNode* toDelete)
 	BSTree leftTree(toDelete->left);
 	BSTreeNode* maxLeft = leftTree.findMax();
 	toDelete->data = maxLeft->data;
-	toDelete->key = maxLeft->key;
 	Delete(maxLeft);
 }
 
@@ -148,27 +195,30 @@ void BSTree::DeleteRoot()
 		root = root->left;
 		delete temp;
 	}
-	else
+	else //2 sons - swap with max node of left sub-tree
 	{
 		swapMaxLeftTree(root);
 	}
 }
 
-void BSTree::Delete(int id)
+void BSTree::Delete(int id, int &numComp)
 {
 	BSTreeNode* temp = root;
-	if (temp->key == id)
+	numComp++;//comparing keys
+	if (temp->getKey() == id)//found - root
 	{
 		DeleteRoot();
 		return;
 	}
 	while (temp != nullptr)
 	{
-		if (temp->key < id)
+		numComp++;//comparing keys
+		if (temp->getKey() < id)
 			temp = temp->right;
 		else
 			temp = temp->left;
-		if (temp->key == id)
+		numComp++;//comparing keys
+		if (temp->getKey() == id)//found
 		{
 			Delete(temp);
 			return;
@@ -181,7 +231,7 @@ int BSTree::Min()
 	BSTreeNode* min = root;
 	while (min->left != nullptr)
 		min = min->left;
-	return min->key;
+	return min->getKey();
 }
 
 int BSTree::Max()
@@ -189,7 +239,7 @@ int BSTree::Max()
 	BSTreeNode* max = root;
 	while (max->right != nullptr)
 		max = max->right;
-	return max->key;
+	return max->getKey();
 }
 
 void BSTree::PrintTree()
@@ -199,6 +249,30 @@ void BSTree::PrintTree()
 		root->InOrder();
 	}
 	cout << endl;
+}
+
+Person* BSTree::FindKthPerson(int &k, int &numComp)
+{
+	BSTreeNode* KthNode = FindKthNode(root, k);
+	return KthNode->data;
+}
+
+/*
+traverse the tree inorder and counting down from k.
+Complexity:
+worst = n (if one-way-left tree or if k==n)
+average = logn + k = n (k is {0,..,n} so averagely k==n/2)
+*/
+BSTreeNode* BSTree::FindKthNode(BSTreeNode* root, int &k) //check if works
+{
+	if (root == nullptr)
+		return nullptr;
+	FindKthNode(root->left, k);
+	if (k == 0)
+		return root;
+	k--;
+	FindKthNode(root->right, k);
+	return nullptr;
 }
 
 int BSTree::Succ(int key)
@@ -214,7 +288,7 @@ int BSTree::Succ(int key)
 		while (temp != root)
 		{
 			if (temp == temp->father->left)
-				return temp->father->key;
+				return temp->father->getKey();
 			temp = temp->father;
 		}
 	}
@@ -234,7 +308,7 @@ int BSTree::Pred(int key)
 		while (temp != root)
 		{
 			if (temp == temp->father->right)
-				return temp->father->key;
+				return temp->father->getKey();
 			temp = temp->father;
 		}
 	}

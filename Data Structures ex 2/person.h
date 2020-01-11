@@ -16,7 +16,7 @@ public:
 	Person(const Person& other);
 	~Person();
 
-	void operator=(const Person& other);
+	void operator=(const Person& other); //deep copying
 
 	void setName(const char* name);
 	void setID(int id);

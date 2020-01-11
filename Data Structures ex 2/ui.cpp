@@ -44,7 +44,6 @@ const char* Ui::getNameFromUser()
 	char userInput[MAX_NAME_LEN];
 
 	cin.getline(userInput, MAX_NAME_LEN); //validation??
-	char* name = new char[strlen(userInput) + 1];
-	return name;
+	return userInput;
 }
 

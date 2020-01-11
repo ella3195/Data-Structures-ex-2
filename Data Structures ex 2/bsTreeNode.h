@@ -9,8 +9,7 @@ class BSTreeNode
 {
 
 private:
-	int key;
-	const char *data;
+	Person* data;
 	BSTreeNode* left, * right, * father;
 
 public:
@@ -18,7 +17,7 @@ public:
 	BSTreeNode(int id, const char* name, BSTreeNode *left, BSTreeNode *right, BSTreeNode* father);
 	~BSTreeNode();
 
-	const char* getData();
+	Person* getData();
 	int getKey();
 
 	void InOrder();

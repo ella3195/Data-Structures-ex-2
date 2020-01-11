@@ -33,34 +33,48 @@ int minHeap::Right(int node)
 	return (2 * node + 2);
 }
 
-void minHeap::FixHeap(int node)
+
+//worst = log n
+//average = log n
+void minHeap::FixHeap(int node, int &numComp)
 {
 	int max;
 	int left = Left(node);
 	int right = Right(node);
 
-	if ((left < heapSize) && (data[left] > data[node]))
+	if (left < heapSize)//is there a left son
 	{
-		max = left;
+		numComp++;//comparing keys
+		if (data[left]->getID() > data[node]->getID())
+		{
+			max = left;
+		}
 	}
 	else max = node;
-	if ((right < heapSize) && (data[right] > data[max]))
+
+	if (right < heapSize)//is there a right son
 	{
-		max = right;
+		numComp++;//comparing keys
+		if (data[right]->getID() > data[max]->getID())
+		{
+			max = right;
+		}
 	}
 	if (max != node)
 	{
 		Swap(data[node], data[max]);
-		FixHeap(max);
+		FixHeap(max, numComp);
 	}
 }
 
-Person* minHeap::Min() // ??
+Person* minHeap::Min()
 {
 	return data[0];
 }
 
-Person* minHeap::DeleteMin()
+
+//worst = average = log n
+Person* minHeap::DeleteMin(int &numComp)
 {
 	if (heapSize < 1)
 	{
@@ -71,11 +85,12 @@ Person* minHeap::DeleteMin()
 		Person* min = data[0];
 		heapSize--;
 		data[0] = data[heapSize];
-		FixHeap(0);
+		FixHeap(0, numComp);
 		return(min);
 	}
 }
 
+//worst = average = log n
 int minHeap::Insert(Person* person)
 {
 	if (heapSize == maxSize)
@@ -84,7 +99,7 @@ int minHeap::Insert(Person* person)
 	}
 	int i = heapSize;
 	heapSize++;
-	while ((i > 0) && data[Parent(i)] < person)
+	while ((i > 0) && data[Parent(i)]->getID() < person->getID())//degrading parents who's key is smaller
 	{
 		data[i] = data[Parent(i)];
 		i = Parent(i);
@@ -92,7 +107,8 @@ int minHeap::Insert(Person* person)
 	data[i] = person;
 }
 
-minHeap::minHeap(Person *arr[], int n) //should be FLOYD
+//n
+minHeap::minHeap(Person *arr[], int n, int &numComp) //FLOYD
 {
 	heapSize = maxSize = n;
 
@@ -101,14 +117,19 @@ minHeap::minHeap(Person *arr[], int n) //should be FLOYD
 
 	for (int i = n / 2 - 1; i >= 0; i--)
 	{
-		FixHeap(i);
+		FixHeap(i, numComp);
 	}
 }
 
 
-void minHeap::MakeEmpty() //unnecessary?
+void minHeap::MakeEmpty()
 {
-
+	if (allocated)
+	{
+		delete[] data;
+	}
+	data = nullptr;
+	maxSize = heapSize = 0;
 }
 
 bool minHeap::IsEmpty()
@@ -117,9 +138,11 @@ bool minHeap::IsEmpty()
 }
 
 
-void minHeap::Swap(Person* a, Person *b)
+void minHeap::Swap(Person*& a, Person*& b)
 {
-
+	Person *temp = a;
+	a = b;
+	b = temp;
 }
 
 
