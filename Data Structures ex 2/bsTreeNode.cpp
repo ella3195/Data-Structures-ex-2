@@ -18,7 +18,7 @@ BSTreeNode::BSTreeNode(int key, const char* name, BSTreeNode *left, BSTreeNode *
 
 BSTreeNode::~BSTreeNode()
 {
-	delete data;
+	
 }
 
 Person* BSTreeNode::getData()

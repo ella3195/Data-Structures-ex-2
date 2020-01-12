@@ -62,6 +62,7 @@ BSTreeNode* BSTree::Find(int key, int &numComp)
 			}
 		}
 	}
+	return nullptr;
 }
 
 BSTreeNode* BSTree::Find(int key)
@@ -85,6 +86,7 @@ BSTreeNode* BSTree::Find(int key)
 			}
 		}
 	}
+	return nullptr;
 }
 
 
@@ -263,16 +265,22 @@ Complexity:
 worst = n (if one-way-left tree or if k==n)
 average = logn + k = n (k is {0,..,n} so averagely k==n/2)
 */
-BSTreeNode* BSTree::FindKthNode(BSTreeNode* root, int &k) //check if works
+BSTreeNode* BSTree::FindKthNode(BSTreeNode* root, int &k)
 {
+	BSTreeNode* left, * right;
 	if (root == nullptr)
 		return nullptr;
-	FindKthNode(root->left, k);
-	if (k == 0)
+	left = FindKthNode(root->left, k);
+	if (k == 1) //we have counted k-1 in inorder - this is the k-th (original k)
+	{
+		k = 0;
 		return root;
-	k--;
-	FindKthNode(root->right, k);
-	return nullptr;
+	}
+	k--; //we have counted one more in inorder
+	right = FindKthNode(root->right, k);
+	if (!left)
+		return right;
+	return left;
 }
 
 int BSTree::Succ(int key)

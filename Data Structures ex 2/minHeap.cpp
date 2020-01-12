@@ -38,32 +38,32 @@ int minHeap::Right(int node)
 //average = log n
 void minHeap::FixHeap(int node, int &numComp)
 {
-	int max;
+	int min = node;
 	int left = Left(node);
 	int right = Right(node);
 
 	if (left < heapSize)//is there a left son
 	{
 		numComp++;//comparing keys
-		if (data[left]->getID() > data[node]->getID())
+		if (data[left]->getID() < data[node]->getID())
 		{
-			max = left;
+			min = left;
 		}
 	}
-	else max = node;
+	else min = node;
 
 	if (right < heapSize)//is there a right son
 	{
 		numComp++;//comparing keys
-		if (data[right]->getID() > data[max]->getID())
+		if (data[right]->getID() < data[min]->getID())
 		{
-			max = right;
+			min = right;
 		}
 	}
-	if (max != node)
+	if (min != node)
 	{
-		Swap(data[node], data[max]);
-		FixHeap(max, numComp);
+		Swap(data[node], data[min]);
+		FixHeap(min, numComp);
 	}
 }
 

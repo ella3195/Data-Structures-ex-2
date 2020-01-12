@@ -18,65 +18,68 @@ int main()
 	int id;
 	int numComp;
 	int selection;
-	char name[20];
-	//
-	//cout << "Please enter the number of Persons to create: " << endl;  //just for us, we will check the tests on mama
-	//cin >> num;
+	const char *name;
+	char clearBuff;
+	
+	cout << "Please enter the number of Persons to create: " << endl;  //just for us, we will check the tests on mama
+	cin >> num;
 
 	System system(5);
 	Ui ui(&system);
-	Person Tom("Tom", 204785034);
-	Person Adi("Adi", 317586955);
-	Person Yosi("Yosi", 308584867);
-	Person Dikla("Dikla", 284985069);
-	Person Niv("Niv", 205674857);
-
-	system.addPerson(&Tom);
-	system.addPerson(&Adi);
-	system.addPerson(&Yosi);
-	system.addPerson(&Dikla);
-	system.addPerson(&Niv);
+	//Person Tom("Tom", 204785034);
+	//Person Adi("Adi", 317586955);
+	//Person Yosi("Yosi", 308584867);
+	//Person Dikla("Dikla", 284985069);
+	//Person Niv("Niv", 205674857);
+	//
+	//system.addPerson(&Tom);
+	//system.addPerson(&Adi);
+	//system.addPerson(&Yosi);
+	//system.addPerson(&Dikla);
+	//system.addPerson(&Niv);
 	int NumComp = 0;
-	Person** allPeople = system.getAllPeople();
-	Person k = RandSelection(allPeople, 5, 5, NumComp);
-	k.show();
-	cin >> num;
+	//Person** allPeople = system.getAllPeople();
+	//Person k = BST(allPeople, 5, 1, NumComp);
+	//k.show();
+	//cin >> num;
 
-	//for (int i = 0; i < num; i++)// create all persons
-	//{
-	//	 id = ui.getIDFromUser();
-	//	 if (id && !system.getPersonByID) //return 0 if there's no person with this id
-	//	 {
-	//		 name = ui.getNameFromUser();
-	//	 }
-	//	 else
-	//	 {
-	//		 cout << "Exiting." << endl;
-	//		 exit(1);
-	//	 }
-	//	 Person* newPerson = new Person(name, id);
-	//	 system.addPerson(newPerson);
-	//}
+	for (int i = 0; i < num; i++)// create all persons
+	{
+		 id = ui.getIDFromUser();
+		 cin.getline(&clearBuff,'\n');
+		 if (id && !system.getPersonByID(id)) //return 0 if there's no person with this id
+		 {
+			 name = ui.getNameFromUser();
+		 }
+		 else
+		 {
+			 cout << "Exiting." << endl;
+			 exit(1);
+		 }
+		 Person* newPerson = new Person(name, id);
+		 system.addPerson(newPerson);
+	}
 
 
-	//selection = ui.getUserSelection();
-	//if (!selection)
-	//{
-	//	cout << "Exiting." << endl;
-	//	exit(1);
-	//}
-	//else
-	//{
-	//	Person person = RandSelection(system.getAllPeople(), selection, numComp);
-	//	person.show();
-	//	cout << "RandSelection: " << numComp << "comparisons" << endl;
-	//  NumComp = 0;
-	//	person = selectHeap(system.getAllPeople(), selection, numComp);
-	//	cout << "selectHeap: " << numComp << "comparisons"  << endl;
-	//  NumComp = 0;
-	//	person = BST(system.getAllPeople(), selection, numComp);
-	//	cout << "BST: " << numComp << "comparisons"  << endl;
-	//}
+	selection = ui.getUserSelection();
+	if (!selection)
+	{
+		cout << "Exiting." << endl;
+		exit(1);
+	}
+	else
+	{
+		int size = system.getTotalPeople();
+		Person person = RandSelection(system.getAllPeople(), size, selection, numComp);
+		person.show();
+		cout << "RandSelection: " << numComp << "comparisons" << endl;
+	  NumComp = 0;
+		person = selectHeap(system.getAllPeople(), size, selection, numComp);
+		cout << "selectHeap: " << numComp << "comparisons"  << endl;
+	  NumComp = 0;
+		person = BST(system.getAllPeople(), size, selection, numComp);
+		cout << "BST: " << numComp << "comparisons"  << endl;
+	}
 }
 
 /*
@@ -90,9 +93,9 @@ const Person& RandSelection(Person **people, int size, int k, int& NumComp)
 	if (pivot == k - 1)
 		return *people[pivot];
 	if (pivot > k - 1)
-		return RandSelection(people, pivot + 1, k, NumComp);
+		return RandSelection(people, size - pivot + 1, k, NumComp);
 	else
-		return RandSelection(people + pivot + 1, size - pivot - 1, k, NumComp);
+		return RandSelection(people + pivot + 1, size - pivot - 1, k - pivot - 1, NumComp);
 }
 
 int Partition(Person *arr[], int size, int& numComp) //check if works
@@ -100,34 +103,42 @@ int Partition(Person *arr[], int size, int& numComp) //check if works
 	srand(time(nullptr));
 	int pivot = rand() % size;
 	int comp = size - 1;
+	
+	//placing pivot at beggining of arr:
 	Person* temp = arr[0];
 	arr[0] = arr[pivot];
 	arr[pivot] = temp;
+	pivot = 0;
+
 	while (pivot != comp)
 	{
 		if (pivot < comp)
 		{
-			numComp++;
+			numComp++; //comparing keys
 			if (arr[pivot]->getID() > arr[comp]->getID())
 			{
+				//switch:
 				temp = arr[pivot];
 				arr[pivot] = arr[comp];
 				arr[comp] = temp;
+				//keep track of pivot:
 				int tmpIndex = comp;
 				comp = pivot + 1;
 				pivot = tmpIndex;
 			}
 			else
-				pivot++;
+				comp--;
 		}
 		else
 		{
-			numComp++;
+			numComp++; //comparing keys
 			if (arr[pivot]->getID() < arr[comp]->getID())
 			{
+				//switch:
 				temp = arr[pivot];
 				arr[pivot] = arr[comp];
 				arr[comp] = temp;
+				//keep track of pivot:
 				int tmpIndex = comp;
 				comp = pivot - 1;
 				pivot = tmpIndex;

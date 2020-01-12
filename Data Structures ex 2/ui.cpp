@@ -42,8 +42,7 @@ int Ui::getUserSelection()
 const char* Ui::getNameFromUser()
 {
 	char userInput[MAX_NAME_LEN];
-
-	cin.getline(userInput, MAX_NAME_LEN); //validation??
+	cin.getline(userInput, MAX_NAME_LEN);
 	return userInput;
 }
 
