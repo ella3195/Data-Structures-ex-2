@@ -22,9 +22,9 @@ public:
 
 
 	const char* getNameFromUser();
+	void getNameFromUser(char*& name);
 	int getIDFromUser();
 	int getUserSelection();
-
 };
 
 

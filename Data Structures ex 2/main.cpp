@@ -16,70 +16,70 @@ int main()
 {
 	int num;
 	int id;
-	int numComp;
+	int numComp = 0;
 	int selection;
-	const char *name;
-	char clearBuff;
-	
+	char *name;
+	Person** people, **pepcpy;
+
+	srand(time(nullptr));
+
 	cout << "Please enter the number of Persons to create: " << endl;  //just for us, we will check the tests on mama
 	cin >> num;
-
+	people = new Person * [num];
+	pepcpy = new Person * [num];
 	System system(5);
 	Ui ui(&system);
-	//Person Tom("Tom", 204785034);
-	//Person Adi("Adi", 317586955);
-	//Person Yosi("Yosi", 308584867);
-	//Person Dikla("Dikla", 284985069);
-	//Person Niv("Niv", 205674857);
-	//
-	//system.addPerson(&Tom);
-	//system.addPerson(&Adi);
-	//system.addPerson(&Yosi);
-	//system.addPerson(&Dikla);
-	//system.addPerson(&Niv);
-	int NumComp = 0;
-	//Person** allPeople = system.getAllPeople();
-	//Person k = BST(allPeople, 5, 1, NumComp);
-	//k.show();
-	//cin >> num;
 
-	for (int i = 0; i < num; i++)// create all persons
-	{
-		 id = ui.getIDFromUser();
-		 cin.getline(&clearBuff,'\n');
-		 if (id && !system.getPersonByID(id)) //return 0 if there's no person with this id
-		 {
-			 name = ui.getNameFromUser();
-		 }
-		 else
-		 {
-			 cout << "Exiting." << endl;
-			 exit(1);
-		 }
-		 Person* newPerson = new Person(name, id);
-		 system.addPerson(newPerson);
-	}
+		for (int i = 0; i < num; i++)// create all persons
+		{
+			id = ui.getIDFromUser();
+			if (id && !system.getPersonByID(id)) //return 0 if there's no person with this id
+			{
+				ui.getNameFromUser(name);
+			}
+			else
+			{
+				cout << "Exiting." << endl;
+				exit(1);
+			}
+			Person* newPerson = new Person(name, id);
+			system.addPerson(newPerson);
+		}
+		people = system.getAllPeople();
 
+		//Copy content of people arr
+		for (int i = 0; i < num; i++)
+			pepcpy[i] = new Person(*people[i]);
 
-	selection = ui.getUserSelection();
-	if (!selection)
-	{
-		cout << "Exiting." << endl;
-		exit(1);
-	}
-	else
-	{
-		int size = system.getTotalPeople();
-		Person person = RandSelection(system.getAllPeople(), size, selection, numComp);
-		person.show();
-		cout << "RandSelection: " << numComp << "comparisons" << endl;
-	  NumComp = 0;
-		person = selectHeap(system.getAllPeople(), size, selection, numComp);
-		cout << "selectHeap: " << numComp << "comparisons"  << endl;
-	  NumComp = 0;
-		person = BST(system.getAllPeople(), size, selection, numComp);
-		cout << "BST: " << numComp << "comparisons"  << endl;
-	}
+		selection = ui.getUserSelection();
+		if (!selection)
+		{
+			cout << "Exiting." << endl;
+			exit(1);
+		}
+		else
+		{
+			int size = system.getTotalPeople();
+			Person person = RandSelection(pepcpy, size, selection, numComp);
+			person.show();
+			cout << "RandSelection: " << numComp << "comparisons" << endl;
+			numComp = 0;
+
+			for (int i = 0; i < num; i++)
+				pepcpy[i] = new Person(*people[i]);
+			person = selectHeap(pepcpy, size, selection, numComp);
+			person.show();
+			cout << "selectHeap: " << numComp << "comparisons" << endl;
+			numComp = 0;
+
+			for (int i = 0; i < num; i++)
+				pepcpy[i] = new Person(*people[i]);
+			person = BST(pepcpy, size, selection, numComp);
+			person.show();
+			cout << "BST: " << numComp << "comparisons" << endl;
+		}
+
+	cin >> num;
 }
 
 /*
@@ -87,20 +87,26 @@ Complexity of RandSelection:
 Tworst(n) = n^2
 Taverage(n) = n
 */
-const Person& RandSelection(Person **people, int size, int k, int& NumComp)
+const Person& RandSelection(Person **people, int size, int k, int& NumComp) // k = 80
 {
-	int pivot = Partition(people, size, NumComp);
-	if (pivot == k - 1)
-		return *people[pivot];
-	if (pivot > k - 1)
-		return RandSelection(people, size - pivot + 1, k, NumComp);
+	if (size == 1)
+	{
+		return *people[0];
+	}
 	else
-		return RandSelection(people + pivot + 1, size - pivot - 1, k - pivot - 1, NumComp);
+	{
+		int pivot = Partition(people, size, NumComp);
+		if (pivot == k - 1)
+			return *people[pivot];
+		if (pivot > k - 1)
+			return RandSelection(people, pivot, k, NumComp);
+		else
+			return RandSelection(people + pivot + 1, size - pivot - 1, k - pivot - 1, NumComp);
+	}
 }
 
 int Partition(Person *arr[], int size, int& numComp) //check if works
 {
-	srand(time(nullptr));
 	int pivot = rand() % size;
 	int comp = size - 1;
 	

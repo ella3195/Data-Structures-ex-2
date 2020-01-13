@@ -17,6 +17,7 @@ Ui::~Ui()
 int Ui::getIDFromUser(){
 	int input;
 	cin >> input;
+	cin.ignore();
 	if (input <= 0) //invalid id
 	{
 		cout << "The id is invalid." << endl;
@@ -44,5 +45,11 @@ const char* Ui::getNameFromUser()
 	char userInput[MAX_NAME_LEN];
 	cin.getline(userInput, MAX_NAME_LEN);
 	return userInput;
+}
+
+void Ui::getNameFromUser(char*& name)
+{
+	name = new char[MAX_NAME_LEN];
+	cin.getline(name, MAX_NAME_LEN);
 }
 

@@ -27,6 +27,8 @@ Person** System::getAllPeople()
 
 System::~System()
 {
+	for (int i = 0; i < totalPeople; i++)
+		delete allPeople[i];
 	delete[] allPeople;
 }
 
