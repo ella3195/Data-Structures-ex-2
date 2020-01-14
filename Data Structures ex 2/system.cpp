@@ -10,7 +10,7 @@ int System::getTotalPeople()
 
 void System::addPerson(Person* newPerson)
 {
-	allPeople[totalPeople] = newPerson;
+	allPeople[totalPeople] = newPerson; //error allocation
 	totalPeople++;
 }
 
@@ -25,11 +25,9 @@ Person** System::getAllPeople()
 	return allPeople;
 }
 
-System::~System()
+System::~System() //error deleting
 {
-	for (int i = 0; i < totalPeople; i++)
-		delete allPeople[i];
-	delete[] allPeople;
+	delete[]allPeople;
 }
 
 Person* System::getPersonByID(int id)

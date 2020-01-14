@@ -1,5 +1,4 @@
 #include <iostream>
-#include "ui.h"
 #include "person.h"
 #include "bsTree.h"
 #include "minHeap.h"
@@ -7,10 +6,13 @@
 #include <time.h> 
 using namespace std;
 
+#pragma warning(disable:4996)
+
 const Person& RandSelection(Person **people, int size, int k, int& NumComp);
 const Person & selectHeap(Person *arr[], int size, int k, int &NumComp);
 const Person & BST(Person*[], int size, int k, int &NumComp);
-int Partition(Person *arr[], int size, int& numComp);
+int Partition(Person *arr[], int size, int& numComp); 
+bool isInArr(Person** arr, int size, int id);
 
 int main()
 {
@@ -18,68 +20,77 @@ int main()
 	int id;
 	int numComp = 0;
 	int selection;
-	char *name;
-	Person** people, **pepcpy;
+	char name[21];
+
+	Person** people1, ** people2, ** people3;
 
 	srand(time(nullptr));
 
-	cout << "Please enter the number of Persons to create: " << endl;  //just for us, we will check the tests on mama
 	cin >> num;
-	people = new Person * [num];
-	pepcpy = new Person * [num];
-	System system(5);
-	Ui ui(&system);
+
+	people1 = new Person * [num];
+	people2 = new Person * [num];
+	people3 = new Person * [num];
+
 
 		for (int i = 0; i < num; i++)// create all persons
 		{
-			id = ui.getIDFromUser();
-			if (id && !system.getPersonByID(id)) //return 0 if there's no person with this id
+			cin >> id;
+			if (id>0 && !isInArr(people1,i,id)) //return 0 if there's no person with this id
 			{
-				ui.getNameFromUser(name);
+				cin.ignore();
+				cin.getline(name, 21);
 			}
 			else
 			{
-				cout << "Exiting." << endl;
+				cout << "Invalid input. Exiting." << endl;
 				exit(1);
 			}
 			Person* newPerson = new Person(name, id);
-			system.addPerson(newPerson);
+			people1[i] = newPerson;
+			people2[i] = new Person(*newPerson);
+			people3[i] = new Person(*newPerson);
 		}
-		people = system.getAllPeople();
-
-		//Copy content of people arr
-		for (int i = 0; i < num; i++)
-			pepcpy[i] = new Person(*people[i]);
-
-		selection = ui.getUserSelection();
-		if (!selection)
+		cin >> selection;
+		if (selection<=0||selection>num)
 		{
-			cout << "Exiting." << endl;
+			cout << "Invalid input. Exiting." << endl;
 			exit(1);
 		}
 		else
 		{
-			int size = system.getTotalPeople();
-			Person person = RandSelection(pepcpy, size, selection, numComp);
+			Person person = RandSelection(people1, num, selection, numComp);
 			person.show();
-			cout << "RandSelection: " << numComp << "comparisons" << endl;
+			cout << "RandSelection: " << numComp << " comparisons" << endl;
 			numComp = 0;
 
-			for (int i = 0; i < num; i++)
-				pepcpy[i] = new Person(*people[i]);
-			person = selectHeap(pepcpy, size, selection, numComp);
-			person.show();
-			cout << "selectHeap: " << numComp << "comparisons" << endl;
+			person = selectHeap(people2, num, selection, numComp);
+			cout << "selectHeap: " << numComp << " comparisons" << endl;
 			numComp = 0;
 
-			for (int i = 0; i < num; i++)
-				pepcpy[i] = new Person(*people[i]);
-			person = BST(pepcpy, size, selection, numComp);
-			person.show();
-			cout << "BST: " << numComp << "comparisons" << endl;
+			person = BST(people3, num, selection, numComp);
+			cout << "BST: " << numComp << " comparisons" << endl;
 		}
+		for (int i = 0; i < num; i++)
+		{
+			delete people1[i];
+			if (people2[i]->getID() > 0) //minheap deleted some of the people
+				delete people2[i];
+			delete people3[i];
+		}
+		delete[]people1;
+		delete[]people2;
+		delete[]people3;
+}
 
-	cin >> num;
+bool isInArr(Person** arr, int size, int id)
+{
+	for (int i = 0; i < size; i++)
+	{
+		if (arr[i]->getID() == id)
+			return true;
+	}
+	return false;
 }
 
 /*
